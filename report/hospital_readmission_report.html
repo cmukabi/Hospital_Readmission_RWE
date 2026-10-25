@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Charles Waweru">
+
+<title>Hospital Readmission Real-World Evidence Analysis</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="hospital_readmission_report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="hospital_readmission_report_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="hospital_readmission_report_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="hospital_readmission_report_files/libs/quarto-html/popper.min.js"></script>
+<script src="hospital_readmission_report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="hospital_readmission_report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="hospital_readmission_report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="hospital_readmission_report_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="hospital_readmission_report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="hospital_readmission_report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="hospital_readmission_report_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link active" data-scroll-target="#executive-summary"><span class="header-section-number">1</span> Executive Summary</a></li>
+  <li><a href="#research-questions" id="toc-research-questions" class="nav-link" data-scroll-target="#research-questions"><span class="header-section-number">2</span> Research Questions</a></li>
+  <li><a href="#data-and-study-population" id="toc-data-and-study-population" class="nav-link" data-scroll-target="#data-and-study-population"><span class="header-section-number">3</span> Data and Study Population</a></li>
+  <li><a href="#statistical-methods" id="toc-statistical-methods" class="nav-link" data-scroll-target="#statistical-methods"><span class="header-section-number">4</span> Statistical Methods</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">5</span> Results</a>
+  <ul class="collapse">
+  <li><a href="#cohort-characteristics" id="toc-cohort-characteristics" class="nav-link" data-scroll-target="#cohort-characteristics"><span class="header-section-number">5.1</span> Cohort Characteristics</a></li>
+  <li><a href="#adjusted-logistic-regression" id="toc-adjusted-logistic-regression" class="nav-link" data-scroll-target="#adjusted-logistic-regression"><span class="header-section-number">5.2</span> Adjusted Logistic Regression</a></li>
+  <li><a href="#does-diagnosis-group-improve-the-readmission-model" id="toc-does-diagnosis-group-improve-the-readmission-model" class="nav-link" data-scroll-target="#does-diagnosis-group-improve-the-readmission-model"><span class="header-section-number">5.3</span> Does Diagnosis Group Improve the Readmission Model?</a></li>
+  <li><a href="#length-of-stay-analysis" id="toc-length-of-stay-analysis" class="nav-link" data-scroll-target="#length-of-stay-analysis"><span class="header-section-number">5.4</span> Length-of-Stay Analysis</a></li>
+  </ul></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations"><span class="header-section-number">6</span> Limitations</a></li>
+  <li><a href="#reproducibility" id="toc-reproducibility" class="nav-link" data-scroll-target="#reproducibility"><span class="header-section-number">7</span> Reproducibility</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">8</span> Conclusion</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Hospital Readmission Real-World Evidence Analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Charles Waweru </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">today</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="executive-summary" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Executive Summary</h1>
+<p>This project demonstrates a reproducible real-world evidence (RWE) workflow using a synthetic hospital admissions dataset. The analysis examines 30-day readmission, patient characteristics, diagnosis groups, and length of stay.</p>
+<p>The dataset is synthetic and does not represent real NHS patients. Results are intended to demonstrate analytical methods rather than describe actual hospital performance.</p>
+</section>
+<section id="research-questions" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Research Questions</h1>
+<ol type="1">
+<li>What is the 30-day readmission rate in the eligible cohort?</li>
+<li>Which patient and admission characteristics are associated with readmission?</li>
+<li>Does adding diagnosis group improve the adjusted readmission model?</li>
+<li>Which characteristics are associated with length of stay?</li>
+</ol>
+</section>
+<section id="data-and-study-population" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Data and Study Population</h1>
+<p>The analysis uses a synthetic hospital admissions dataset. The eligible index cohort is restricted to qualifying 2025 discharges without a recorded discharge in the preceding 30 days.</p>
+<p>Readmission is defined as a subsequent emergency or urgent non-emergency admission within 30 days of index discharge.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Study cohort summary</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Measure</th>
+<th style="text-align: right;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Total admissions in dataset</td>
+<td style="text-align: right;">1861.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Eligible index admissions</td>
+<td style="text-align: right;">1443.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unique patients in eligible cohort</td>
+<td style="text-align: right;">952.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Readmissions within 30 days</td>
+<td style="text-align: right;">150.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">30-day readmission rate (%)</td>
+<td style="text-align: right;">10.4</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="statistical-methods" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Statistical Methods</h1>
+<p>Descriptive statistics and adjusted logistic regression are used to examine 30-day readmission. An exploratory model comparison assesses whether diagnosis group adds explanatory value.</p>
+<p>Length of stay is examined separately using a Gamma regression model with a log link and a patient-clustered generalized estimating equation.</p>
+</section>
+<section id="results" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Results</h1>
+<section id="cohort-characteristics" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="cohort-characteristics"><span class="header-section-number">5.1</span> Cohort Characteristics</h2>
+<p>The eligible index cohort comprises admissions meeting the study’s eligibility criteria. The following table summarises the characteristics of the eligible cohort.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Descriptive summary of the eligible cohort</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Measure</th>
+<th style="text-align: right;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Total admissions in dataset</td>
+<td style="text-align: right;">1861.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Eligible index admissions</td>
+<td style="text-align: right;">1443.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Unique patients in eligible cohort</td>
+<td style="text-align: right;">952.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Readmissions within 30 days</td>
+<td style="text-align: right;">150.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">30-day readmission rate (%)</td>
+<td style="text-align: right;">10.4</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Observed 30-day readmission by admission type</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">admission_type</th>
+<th style="text-align: right;">Admissions</th>
+<th style="text-align: right;">Readmissions</th>
+<th style="text-align: right;">Readmission rate (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Urgent_non_emergency</td>
+<td style="text-align: right;">309</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">13.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Elective</td>
+<td style="text-align: right;">432</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">10.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Emergency</td>
+<td style="text-align: right;">702</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">9.1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="adjusted-logistic-regression" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="adjusted-logistic-regression"><span class="header-section-number">5.2</span> Adjusted Logistic Regression</h2>
+<p>Logistic regression was used to examine associations between patient and admission characteristics and 30-day readmission. The primary model adjusted for admission type, age, sex, and comorbidity count.</p>
+<p>The results below are expressed as adjusted odds ratios (aORs) with 95% confidence intervals.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Adjusted logistic regression results for 30-day readmission</caption>
+<colgroup>
+<col style="width: 48%">
+<col style="width: 13%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Predictor</th>
+<th style="text-align: right;">Adjusted OR</th>
+<th style="text-align: right;">95% CI lower</th>
+<th style="text-align: right;">95% CI upper</th>
+<th style="text-align: right;">P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Intercept</td>
+<td style="text-align: right;">0.035</td>
+<td style="text-align: right;">0.018</td>
+<td style="text-align: right;">0.066</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Elective admission vs emerency</td>
+<td style="text-align: right;">1.183</td>
+<td style="text-align: right;">0.782</td>
+<td style="text-align: right;">1.792</td>
+<td style="text-align: right;">0.426</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Urgent non-emergency admission vs emergency</td>
+<td style="text-align: right;">1.524</td>
+<td style="text-align: right;">0.993</td>
+<td style="text-align: right;">2.339</td>
+<td style="text-align: right;">0.054</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Age (years)</td>
+<td style="text-align: right;">1.012</td>
+<td style="text-align: right;">1.004</td>
+<td style="text-align: right;">1.020</td>
+<td style="text-align: right;">0.002</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Male vs female</td>
+<td style="text-align: right;">1.034</td>
+<td style="text-align: right;">0.726</td>
+<td style="text-align: right;">1.471</td>
+<td style="text-align: right;">0.854</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sex unknown vs female</td>
+<td style="text-align: right;">0.337</td>
+<td style="text-align: right;">0.045</td>
+<td style="text-align: right;">2.537</td>
+<td style="text-align: right;">0.291</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Comorbidity count</td>
+<td style="text-align: right;">1.162</td>
+<td style="text-align: right;">1.044</td>
+<td style="text-align: right;">1.293</td>
+<td style="text-align: right;">0.006</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="does-diagnosis-group-improve-the-readmission-model" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="does-diagnosis-group-improve-the-readmission-model"><span class="header-section-number">5.3</span> Does Diagnosis Group Improve the Readmission Model?</h2>
+<p>We compared two adjusted logistic regression models using the same 1,368 complete-case admissions from 922 patients.</p>
+<ul>
+<li><strong>Model A:</strong> admission type, age, sex, and comorbidity count.</li>
+<li><strong>Model B:</strong> Model A’s predictors plus diagnosis group.</li>
+</ul>
+<p>The likelihood-ratio test assessed whether adding diagnosis group improved model fit. AIC and BIC were used to compare model fit while penalising model complexity. Apparent AUC measures discrimination on the same data used to fit the models.</p>
+<p>The likelihood-ratio test did not provide strong evidence that adding diagnosis group improved model fit (chi-squared = 9.83, 8 degrees of freedom, p = 0.277). AIC and BIC favoured the simpler model.</p>
+<p>Although Model B had a higher apparent AUC, the preliminary five-fold cross-validated mean AUCs were very similar (0.605 for Model A and 0.609 for Model B). The small difference does not establish a meaningful improvement in performance on new patients.</p>
+<p>Model A was therefore retained as the provisional primary model, while Model B was treated as an exploratory analysis.</p>
+</section>
+<section id="length-of-stay-analysis" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="length-of-stay-analysis"><span class="header-section-number">5.4</span> Length-of-Stay Analysis</h2>
+<p>Length of stay (LOS) was analysed using a Gamma regression model with a log link and patient-clustered generalized estimating equations (GEE). This approach accounts for the positive, right-skewed nature of LOS and allows for correlation between repeated admissions from the same patient.</p>
+<p>Results are presented as expected length-of-stay ratios. A ratio above 1 indicates a higher expected LOS, while a ratio below 1 indicates a lower expected LOS, conditional on the model covariates.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Patient-clustered Gamma GEE results for length of stay</caption>
+<colgroup>
+<col style="width: 43%">
+<col style="width: 12%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Predictor</th>
+<th style="text-align: right;">LOS ratio</th>
+<th style="text-align: right;">95% CI lower</th>
+<th style="text-align: right;">95% CI upper</th>
+<th style="text-align: right;">P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Emergency admission</td>
+<td style="text-align: right;">1.045</td>
+<td style="text-align: right;">0.957</td>
+<td style="text-align: right;">1.141</td>
+<td style="text-align: right;">0.330</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Urgent non-emergency vs emergency</td>
+<td style="text-align: right;">0.907</td>
+<td style="text-align: right;">0.820</td>
+<td style="text-align: right;">1.002</td>
+<td style="text-align: right;">0.056</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Age (years)</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">0.998</td>
+<td style="text-align: right;">1.001</td>
+<td style="text-align: right;">0.773</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Male vs female</td>
+<td style="text-align: right;">1.062</td>
+<td style="text-align: right;">0.987</td>
+<td style="text-align: right;">1.143</td>
+<td style="text-align: right;">0.107</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sex unknown vs female</td>
+<td style="text-align: right;">0.941</td>
+<td style="text-align: right;">0.760</td>
+<td style="text-align: right;">1.165</td>
+<td style="text-align: right;">0.579</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Comorbidity count</td>
+<td style="text-align: right;">1.019</td>
+<td style="text-align: right;">0.996</td>
+<td style="text-align: right;">1.042</td>
+<td style="text-align: right;">0.103</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>In this model, the estimated expected LOS was approximately 9% lower for urgent non-emergency admissions than for emergency admissions. However, the confidence interval included 1 and the p-value was approximately 0.056, so the evidence did not meet the conventional 5% significance threshold.</p>
+<p>The other reported covariates also did not show statistically significant associations with LOS at the 5% level in this model. These estimates are exploratory and are based on synthetic data.</p>
+</section>
+</section>
+<section id="limitations" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Limitations</h1>
+<p>The dataset is synthetic. The adjusted analyses used complete cases, which may limit the representativeness of the analytical sample. Model validation was preliminary, and observed associations do not establish causation. Model performance on synthetic data does not establish predictive performance in real clinical settings.</p>
+</section>
+<section id="reproducibility" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Reproducibility</h1>
+<p>Analysis scripts and generated outputs are maintained separately from this report so the workflow can be rerun and audited.</p>
+</section>
+<section id="conclusion" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Conclusion</h1>
+<p>Analysis scripts and generated outputs are maintained separately from this report so the workflow can be rerun and audited. This project demonstrates an end-to-end analytical workflow for a synthetic hospital admissions dataset, covering cohort definition, descriptive analysis, adjusted regression, model comparison, and patient-level validation.</p>
+<p>The diagnosis-group model showed a small difference in cross-validated AUC compared with the simpler model, while AIC, BIC, and the likelihood-ratio test favoured the simpler specification. The simpler adjusted logistic regression is therefore retained as the provisional primary model.</p>
+<p>The findings illustrate the importance of balancing model fit, complexity, and validation performance when developing an RWE analysis.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

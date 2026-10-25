@@ -1,0 +1,3 @@
+"Outcome","N","Mean_LOS","Median_LOS","IQR_LOS"
+"No readmission",1293,4.98298530549111,4,5
+"Readmission",150,4.76666666666667,4,4

@@ -1,0 +1,253 @@
+---
+title: "Readmission Real-World Evidence Analysis"
+format: html
+editor: visual
+---
+
+---
+title: "Hospital Readmission Real-World Evidence Analysis"
+author: "Charles Waweru"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+# Executive Summary
+
+This project demonstrates a reproducible real-world evidence (RWE) workflow using a synthetic hospital admissions dataset. The analysis examines 30-day readmission, patient characteristics, diagnosis groups, and length of stay.
+
+The dataset is synthetic and does not represent real NHS patients. Results are intended to demonstrate analytical methods rather than describe actual hospital performance.
+
+# Research Questions
+
+1.  What is the 30-day readmission rate in the eligible cohort?
+2.  Which patient and admission characteristics are associated with readmission?
+3.  Does adding diagnosis group improve the adjusted readmission model?
+4.  Which characteristics are associated with length of stay?
+
+# Data and Study Population
+
+The analysis uses a synthetic hospital admissions dataset. The eligible index cohort is restricted to qualifying 2025 discharges without a recorded discharge in the preceding 30 days.
+
+Readmission is defined as a subsequent emergency or urgent non-emergency admission within 30 days of index discharge.
+
+```{r}
+library(tidyverse)
+
+hospital_data <- read_csv(
+  "../data/clean/hospital_admissions_working.csv",
+  show_col_types = FALSE
+)
+
+eligible_data <- hospital_data |>
+  filter(eligible_index == TRUE)
+
+cohort_summary <- tibble(
+  Measure = c(
+    "Total admissions in dataset",
+    "Eligible index admissions",
+    "Unique patients in eligible cohort",
+    "Readmissions within 30 days",
+    "30-day readmission rate (%)"
+  ),
+  Value = c(
+    nrow(hospital_data),
+    nrow(eligible_data),
+    n_distinct(eligible_data$patient_id),
+    sum(eligible_data$readmission_30d == 1, na.rm = TRUE),
+    round(mean(eligible_data$readmission_30d == 1, na.rm = TRUE) * 100, 2)
+  )
+)
+
+knitr::kable(cohort_summary, caption = "Study cohort summary")
+```
+
+# Statistical Methods
+
+Descriptive statistics and adjusted logistic regression are used to examine 30-day readmission. An exploratory model comparison assesses whether diagnosis group adds explanatory value.
+
+Length of stay is examined separately using a Gamma regression model with a log link and a patient-clustered generalized estimating equation.
+
+# Results
+
+## Cohort Characteristics
+
+The eligible index cohort comprises admissions meeting the study's eligibility criteria. The following table summarises the characteristics of the eligible cohort.
+
+```{r}
+knitr::kable(
+  cohort_summary,
+  digits = 1,
+  caption = "Descriptive summary of the eligible cohort"
+)
+```{r}
+admission_type_summary <- eligible_data |>
+  dplyr::group_by(admission_type) |>
+  dplyr::summarise(
+    Admissions = dplyr::n(),
+    Readmissions = sum(readmission_30d == 1, na.rm = TRUE),
+    `Readmission rate (%)` = round(
+      mean(readmission_30d == 1, na.rm = TRUE) * 100, 1
+    ),
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(`Readmission rate (%)`))
+
+knitr::kable(
+  admission_type_summary,
+  caption = "Observed 30-day readmission by admission type"
+)
+```
+
+## Adjusted Logistic Regression
+
+Logistic regression was used to examine associations between patient and admission characteristics and 30-day readmission. The primary model adjusted for admission type, age, sex, and comorbidity count.
+
+The results below are expressed as adjusted odds ratios (aORs) with 95% confidence intervals.
+
+```{r}
+```{r}
+logistic_results <- readr::read_csv(
+  "../outputs/results/logistic_model_2_adjusted_results.csv",
+  show_col_types = FALSE
+)
+
+logistic_results |>
+  dplyr::mutate(
+    Predictor = dplyr::recode(
+      Term,
+      "(Intercept)" = "Intercept",
+      "admission_typeElective" = "Elective admission vs emerency",
+      "admission_typeUrgent_non_emergency" = "Urgent non-emergency admission vs emergency",
+      "age" = "Age (years)",
+      "sexMale" = "Male vs female",
+      "sexUnknown" = "Sex unknown vs female",
+      "comorbidity_count" = "Comorbidity count"
+    )
+  ) |>
+  dplyr::select(
+    Predictor,
+    `Adjusted OR` = Adjusted_OR,
+    `95% CI lower` = Lower_95_CI,
+    `95% CI upper` = Upper_95_CI,
+    `P-value` = P_value
+  ) |>
+  knitr::kable(
+    digits = 3,
+    caption = "Adjusted logistic regression results for 30-day readmission"
+  )
+```
+
+## Does Diagnosis Group Improve the Readmission Model?
+
+We compared two adjusted logistic regression models using the same 1,368 complete-case admissions from 922 patients.
+
+- **Model A:** admission type, age, sex, and comorbidity count.
+- **Model B:** Model A's predictors plus diagnosis group.
+
+The likelihood-ratio test assessed whether adding diagnosis group improved model fit. AIC and BIC were used to compare model fit while penalising model complexity. Apparent AUC measures discrimination on the same data used to fit the models.
+
+```{model_comparison_report <- readr::read_csv(}
+  "../outputs/results/diagnosis_final_model_comparison.csv",
+  show_col_types = FALSE
+)
+
+model_comparison_report |>
+  dplyr::select(
+    model,
+    observations,
+    AIC,
+    BIC,
+    apparent_auc,
+    cross_validated_mean_auc
+  ) |>
+  dplyr::rename(
+    Model = model,
+    `Admissions` = observations,
+    `AIC` = AIC,
+    `BIC` = BIC,
+    `Apparent AUC` = apparent_auc,
+    `Cross-validated AUC` = cross_validated_mean_auc
+  ) |>
+  knitr::kable(
+    digits = 3,
+    caption = "Comparison of models with and without diagnosis group"
+  )
+```
+
+The likelihood-ratio test did not provide strong evidence that adding diagnosis group improved model fit (chi-squared = 9.83, 8 degrees of freedom, p = 0.277). AIC and BIC favoured the simpler model.
+
+Although Model B had a higher apparent AUC, the preliminary five-fold cross-validated mean AUCs were very similar (0.605 for Model A and 0.609 for Model B). The small difference does not establish a meaningful improvement in performance on new patients.
+
+Model A was therefore retained as the provisional primary model, while Model B was treated as an exploratory analysis.
+
+## Length-of-Stay Analysis
+
+Length of stay (LOS) was analysed using a Gamma regression model with a log link and patient-clustered generalized estimating equations (GEE). This approach accounts for the positive, right-skewed nature of LOS and allows for correlation between repeated admissions from the same patient.
+
+Results are presented as expected length-of-stay ratios. A ratio above 1 indicates a higher expected LOS, while a ratio below 1 indicates a lower expected LOS, conditional on the model covariates.
+
+```{r}
+los_results <- readr::read_csv(
+  "../outputs/results/gamma_los_gee_results.csv",
+  show_col_types = FALSE
+)
+
+los_results |>
+  dplyr::select(
+    term,
+    los_ratio,
+    conf_low,
+    conf_high,
+    p_value
+  ) |>
+  dplyr::mutate(
+    Predictor = dplyr::recode(
+  term,
+  "admission_typeEmergency" = "Emergency admission",
+  "admission_typeUrgent_non_emergency" = "Urgent non-emergency vs emergency",
+  "age" = "Age (years)",
+  "sexMale" = "Male vs female",
+  "sexUnknown" = "Sex unknown vs female",
+  "comorbidity_count" = "Comorbidity count"
+) 
+  ) |>
+  dplyr::select(
+    Predictor,
+    `LOS ratio` = los_ratio,
+    `95% CI lower` = conf_low,
+    `95% CI upper` = conf_high,
+    `P-value` = p_value
+  ) |>
+  knitr::kable(
+    digits = 3,
+    caption = "Patient-clustered Gamma GEE results for length of stay"
+  )
+```
+
+In this model, the estimated expected LOS was approximately 9% lower for urgent non-emergency admissions than for emergency admissions. However, the confidence interval included 1 and the p-value was approximately 0.056, so the evidence did not meet the conventional 5% significance threshold.
+
+The other reported covariates also did not show statistically significant associations with LOS at the 5% level in this model. These estimates are exploratory and are based on synthetic data.
+
+# Limitations
+
+The dataset is synthetic. The adjusted analyses used complete cases, which may limit the representativeness of the analytical sample. Model validation was preliminary, and observed associations do not establish causation. Model performance on synthetic data does not establish predictive performance in real clinical settings.
+
+# Reproducibility
+
+Analysis scripts and generated outputs are maintained separately from this report so the workflow can be rerun and audited.
+
+# Conclusion
+
+Analysis scripts and generated outputs are maintained separately from this report so the workflow can be rerun and audited. This project demonstrates an end-to-end analytical workflow for a synthetic hospital admissions dataset, covering cohort definition, descriptive analysis, adjusted regression, model comparison, and patient-level validation.
+
+The diagnosis-group model showed a small difference in cross-validated AUC compared with the simpler model, while AIC, BIC, and the likelihood-ratio test favoured the simpler specification. The simpler adjusted logistic regression is therefore retained as the provisional primary model.
+
+The findings illustrate the importance of balancing model fit, complexity, and validation performance when developing an RWE analysis.

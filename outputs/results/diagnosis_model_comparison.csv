@@ -1,0 +1,3 @@
+model,observations,residual_deviance,AIC,BIC
+Model A: Without diagnosis group,1368,898.0734615200605,912.0734615200605,948.621197207338
+Model B: With diagnosis group,1368,888.2444513728279,918.2444513728279,996.5610278455654

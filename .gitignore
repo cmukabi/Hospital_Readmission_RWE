@@ -1,0 +1,6 @@
+.Rhistory
+.Rproj.user/
+.DS_Store
+outputs/results/archive_unrelated_models/
+data/raw/synthetic_hospital_admissions_backup.csv
+scripts/01_generate_data_backup.R
