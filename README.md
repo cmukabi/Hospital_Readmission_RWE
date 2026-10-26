@@ -6,6 +6,10 @@ This project demonstrates a reproducible Real-World Evidence (RWE) workflow usin
 
 The project is designed to demonstrate applied skills in healthcare data analysis, epidemiological methods, statistical modelling, reproducible research, and interpretation of clinical outcomes.
 
+## View the Published Report
+
+[Open the full interactive Hospital Readmission RWE Report](https://cmukabi.github.io/Hospital_Readmission_RWE/report/hospital_readmission_report.html)
+
 **Data privacy and provenance:** All data are simulated. They do not represent real patients, actual NHS hospital records, or observed hospital performance.
 
 ## Project Objectives
