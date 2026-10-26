@@ -60,7 +60,10 @@ Hospital_Readmission_RWE/
 | `03_clean_data.R` | Load the raw data, restore date formats, and save the working dataset. |
 | `04_data_dictionary.R` | Document selected variables, their meanings, and data types. |
 | `05_descriptive_analysis.R` | Summarise the cohort, readmission outcomes, admission types, and length of stay; export tables and a histogram. |
-| Scripts 06–09 | Extend the analysis through regression modelling, length-of-stay modelling, model diagnostics, and comparison of models with and without diagnosis group. |
+|| `06_logistic_regression.R` | Fits logistic regression models for 30-day readmission, including adjusted and patient-clustered models, and produces a forest plot. |
+| `07_gamma_los_model.R` | Models length of stay using Gamma regression and patient-clustered generalised estimating equations (GEE). |
+| `08_model_diagnostics.R` | Assesses model assumptions and performance using diagnostics, influence analysis, sensitivity analysis, discrimination, and calibration. |
+| `09_diagnosis_group_analysis.R` | Compares readmission models with and without diagnosis group, including patient-level cross-validation. |
 
 ### Statistical methods
 
