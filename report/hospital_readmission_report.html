@@ -411,9 +411,10 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="conclusion" class="level1" data-number="8">
 <h1 data-number="8"><span class="header-section-number">8</span> Conclusion</h1>
-<p>Analysis scripts and generated outputs are maintained separately from this report so the workflow can be rerun and audited. This project demonstrates an end-to-end analytical workflow for a synthetic hospital admissions dataset, covering cohort definition, descriptive analysis, adjusted regression, model comparison, and patient-level validation.</p>
-<p>The diagnosis-group model showed a small difference in cross-validated AUC compared with the simpler model, while AIC, BIC, and the likelihood-ratio test favoured the simpler specification. The simpler adjusted logistic regression is therefore retained as the provisional primary model.</p>
-<p>The findings illustrate the importance of balancing model fit, complexity, and validation performance when developing an RWE analysis.</p>
+<p>This project demonstrates an end-to-end real-world evidence (RWE) analytical workflow using a synthetic hospital admissions dataset. The analysis covered cohort definition, descriptive statistics, adjusted logistic regression, model comparison, and patient-clustered analysis of length of stay.</p>
+<p>The adjusted analysis identified associations between 30-day readmission and both age and comorbidity count. However, these findings are based on synthetic data and should not be interpreted as evidence of clinical effects or used to guide patient care.</p>
+<p>Adding diagnosis group produced only a small difference in cross-validated AUC compared with the simpler model. The likelihood-ratio test did not provide strong evidence of improved model fit, supporting retention of the simpler adjusted logistic regression as the provisional primary model.</p>
+<p>Overall, this project demonstrates the importance of transparent reporting, reproducible analytical workflows, appropriate handling of repeated patient admissions, and balancing model complexity against performance when developing RWE analyses.</p>
 </section>
 
 </main>
