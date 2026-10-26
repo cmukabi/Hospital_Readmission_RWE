@@ -392,6 +392,7 @@ comparison_terms <- c(
   "admission_typeUrgent_non_emergency",
   "age",
   "sexMale",
+  "sexUnknown",
   "comorbidity_count"
 )
 
@@ -469,6 +470,7 @@ plot_data$predictor <- factor(
     "admission_typeUrgent_non_emergency",
     "age",
     "sexMale",
+    "sexUnknown",
     "comorbidity_count"
   )),
   labels = rev(c(
@@ -476,6 +478,7 @@ plot_data$predictor <- factor(
     "Urgent non-emergency vs Emergency",
     "Age (per year)",
     "Male vs Female",
+    "Unknown vs Female",
     "Comorbidity count (per condition)"
   ))
 )
