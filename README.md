@@ -175,3 +175,10 @@ Important limitations include:
 This portfolio project is intended for healthcare research, Real-World Evidence (RWE), clinical outcomes research, health services research, monitoring and evaluation, and applied health data analytics roles.
 
 It demonstrates an end-to-end analytical workflow, from synthetic data generation to model assessment and reproducible reporting, while emphasising transparent interpretation and the limitations of simulated evidence.
+## AI Use and Transparency
+
+Generative AI (ChatGPT by OpenAI) was used as a supporting tool during project development to explain R code, assist with debugging, refine documentation, and support the organisation of the analytical workflow.
+
+The synthetic data generation, statistical modelling, diagnostic procedures, and interpretation of results were reviewed iteratively. AI-generated suggestions were checked against the code and outputs, and the project author remains responsible for the accuracy, reproducibility, and conclusions of the published work.
+
+All data in this project are simulated and do not represent real patients or actual hospital records.
