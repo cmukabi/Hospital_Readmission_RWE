@@ -6,6 +6,17 @@ This project demonstrates a reproducible Real-World Evidence (RWE) workflow usin
 
 The project is designed to demonstrate applied skills in healthcare data analysis, epidemiological methods, statistical modelling, reproducible research, and interpretation of clinical outcomes.
 
+## Research Questions
+
+This project addresses four analytical questions using a synthetic hospital admissions dataset:
+
+1. What is the observed 30-day readmission rate among eligible index admissions?
+2. Which patient and admission characteristics are associated with 30-day readmission in the adjusted logistic regression model?
+3. Does adding diagnosis group improve model fit or discrimination compared with the simpler readmission model?
+4. Which patient and admission characteristics are associated with length of hospital stay in the patient-clustered Gamma GEE analysis?
+
+These analyses are exploratory demonstrations of RWE methods. Because the dataset is synthetic, the findings do not represent actual hospital outcomes or establish clinical effects.
+
 ## View the Published Report
 
 [Open the full interactive Hospital Readmission RWE Report](https://cmukabi.github.io/Hospital_Readmission_RWE/report/hospital_readmission_report.html)
