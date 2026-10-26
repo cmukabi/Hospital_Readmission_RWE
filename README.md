@@ -169,6 +169,30 @@ The workflow is organised into numbered R scripts and uses saved CSV files to su
 
 The data-generation script recreates the synthetic cohort. Because generation uses random seeds, the script is designed to produce reproducible simulated data when run under the same conditions and software environment.
 
+## R Package Requirements
+
+The analysis uses R and the following packages:
+
+- `tidyverse` — data preparation and manipulation
+- `geepack` — generalized estimating equations (GEE)
+- `pROC` — ROC curves and AUC estimation
+- `broom` — tidying model results
+- `car` — variance inflation factor (VIF) diagnostics
+
+Install the required packages once in R before running the analysis:
+
+```r
+install.packages(c(
+  "tidyverse",
+  "geepack",
+  "pROC",
+  "broom",
+  "car"
+))
+```
+
+Open `Hospital_Readmission_RWE.Rproj` in RStudio and run the numbered scripts from the project root in the documented workflow order. The dataset is synthetic; no real patient data are used.
+
 Important limitations include:
 
 - The dataset is simulated and cannot establish real-world clinical associations.
